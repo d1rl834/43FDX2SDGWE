@@ -190,18 +190,24 @@
 
         // Отображение данных пользователя
         function showUserInfo() {
+            // Получаем никнейм из URL параметра (от бота)
+            const urlParams = new URLSearchParams(window.location.search);
+            const usernameFromUrl = urlParams.get('username');
+            
             const user = tg.initDataUnsafe.user;
             const infoDiv = document.getElementById('userInfo');
             const usernameDisplay = document.getElementById('usernameDisplay');
             const usernameValue = document.getElementById('usernameValue');
 
-            if (user) {
-                // Показываем никнейм, если он есть
-                if (user.username) {
-                    usernameValue.textContent = '@' + user.username;
-                    usernameDisplay.style.display = 'block';
-                }
+            // Приоритет: никнейм от бота (из URL), иначе из Telegram
+            const username = usernameFromUrl || (user ? user.username : null);
 
+            if (username) {
+                usernameValue.textContent = '@' + username;
+                usernameDisplay.style.display = 'block';
+            }
+
+            if (user) {
                 infoDiv.innerHTML = `
                     <p><strong>ID:</strong> ${user.id}</p>
                     <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
