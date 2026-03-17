@@ -221,15 +221,21 @@
             const nameDisplay = document.getElementById('nameDisplay');
             const nameValue = document.getElementById('nameValue');
 
-            // Приоритет: имя от бота (из URL), иначе из Telegram
-            const displayName = fullName || (firstName ? `${firstName}${lastName ? ' ' + lastName : ''}` : null) || (user ? `${user.first_name}${user.last_name ? ' ' + user.last_name : ''}` : null);
+            // Приоритет: имя от бота (из URL)
+            const displayName = fullName || (firstName ? `${firstName}${lastName ? ' ' + lastName : ''}` : null);
 
             if (displayName) {
                 nameValue.textContent = displayName;
                 nameDisplay.style.display = 'block';
             }
 
-            if (user) {
+            // Показываем информацию из URL или из Telegram
+            if (firstName) {
+                infoDiv.innerHTML = `
+                    <p><strong>Имя:</strong> ${firstName} ${lastName || ''}</p>
+                    <p><strong>Источник:</strong> Бот Telegram</p>
+                `;
+            } else if (user) {
                 infoDiv.innerHTML = `
                     <p><strong>ID:</strong> ${user.id}</p>
                     <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
