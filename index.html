@@ -63,6 +63,26 @@
             font-weight: bold;
         }
 
+        .name-display {
+            background: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .name-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .name-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
         .btn {
             width: 100%;
             padding: 14px;
@@ -151,9 +171,9 @@
     <div class="container">
         <h1>🎮 Telegram Mini App</h1>
 
-        <div class="username-display" id="usernameDisplay" style="display: none;">
-            <div class="username-label">Ваш никнейм</div>
-            <div class="username-value" id="usernameValue">@username</div>
+        <div class="name-display" id="nameDisplay" style="display: none;">
+            <div class="name-label">Пользователь</div>
+            <div class="name-value" id="nameValue">Имя</div>
         </div>
 
         <div class="user-info" id="userInfo">
@@ -190,21 +210,23 @@
 
         // Отображение данных пользователя
         function showUserInfo() {
-            // Получаем никнейм из URL параметра (от бота)
+            // Получаем имя из URL параметров (от бота)
             const urlParams = new URLSearchParams(window.location.search);
-            const usernameFromUrl = urlParams.get('username');
+            const firstName = urlParams.get('first_name');
+            const lastName = urlParams.get('last_name');
+            const fullName = urlParams.get('full_name');
             
             const user = tg.initDataUnsafe.user;
             const infoDiv = document.getElementById('userInfo');
-            const usernameDisplay = document.getElementById('usernameDisplay');
-            const usernameValue = document.getElementById('usernameValue');
+            const nameDisplay = document.getElementById('nameDisplay');
+            const nameValue = document.getElementById('nameValue');
 
-            // Приоритет: никнейм от бота (из URL), иначе из Telegram
-            const username = usernameFromUrl || (user ? user.username : null);
+            // Приоритет: имя от бота (из URL), иначе из Telegram
+            const displayName = fullName || (firstName ? `${firstName}${lastName ? ' ' + lastName : ''}` : null) || (user ? `${user.first_name}${user.last_name ? ' ' + user.last_name : ''}` : null);
 
-            if (username) {
-                usernameValue.textContent = '@' + username;
-                usernameDisplay.style.display = 'block';
+            if (displayName) {
+                nameValue.textContent = displayName;
+                nameDisplay.style.display = 'block';
             }
 
             if (user) {
