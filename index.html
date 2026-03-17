@@ -43,6 +43,26 @@
             font-size: 14px;
         }
 
+        .username-display {
+            background: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .username-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .username-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
         .btn {
             width: 100%;
             padding: 14px;
@@ -130,7 +150,12 @@
 <body>
     <div class="container">
         <h1>🎮 Telegram Mini App</h1>
-        
+
+        <div class="username-display" id="usernameDisplay" style="display: none;">
+            <div class="username-label">Ваш никнейм</div>
+            <div class="username-value" id="usernameValue">@username</div>
+        </div>
+
         <div class="user-info" id="userInfo">
             <p>Загрузка данных пользователя...</p>
         </div>
@@ -167,8 +192,16 @@
         function showUserInfo() {
             const user = tg.initDataUnsafe.user;
             const infoDiv = document.getElementById('userInfo');
-            
+            const usernameDisplay = document.getElementById('usernameDisplay');
+            const usernameValue = document.getElementById('usernameValue');
+
             if (user) {
+                // Показываем никнейм, если он есть
+                if (user.username) {
+                    usernameValue.textContent = '@' + user.username;
+                    usernameDisplay.style.display = 'block';
+                }
+
                 infoDiv.innerHTML = `
                     <p><strong>ID:</strong> ${user.id}</p>
                     <p><strong>Имя:</strong> ${user.first_name} ${user.last_name || ''}</p>
